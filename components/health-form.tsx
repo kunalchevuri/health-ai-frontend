@@ -65,8 +65,9 @@ export function HealthForm({ onSubmit, isLoading }: HealthFormProps) {
   const [age, setAge] = useState(30)
   const [sex, setSex] = useState(0)
   const [fitnessLevel, setFitnessLevel] = useState("1")
-  const [bmiEnabled, setBmiEnabled] = useState(false)
-  const [bmi, setBmi] = useState(22)
+  const [heightFt, setHeightFt] = useState(5)
+  const [heightIn, setHeightIn] = useState(8)
+  const [weightLbs, setWeightLbs] = useState(150)
 
   const [sleepHours, setSleepHours] = useState(7)
   const [sleepConsistencyEnabled, setSleepConsistencyEnabled] = useState(false)
@@ -103,7 +104,9 @@ export function HealthForm({ onSubmit, isLoading }: HealthFormProps) {
       meals,
       caloric_intake: caloricIntake,
       fitness_level: parseInt(fitnessLevel),
-      bmi: bmiEnabled ? bmi : null,
+      height_ft: heightFt,
+      height_in: heightIn,
+      weight_lbs: weightLbs,
       sleep_consistency: sleepConsistencyEnabled ? sleepConsistency : null,
       occupation,
       user_context: userContext,
@@ -127,7 +130,39 @@ export function HealthForm({ onSubmit, isLoading }: HealthFormProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Card 1: Personal Information */}
+        {/* Card 1: About You */}
+        <Card style={{ backgroundColor: "#1a1a1a", borderColor: "#2a2a2a", borderRadius: "0.75rem" }}>
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <User className="h-5 w-5 text-primary" />
+              About You
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm text-muted-foreground">Occupation</Label>
+              <Input
+                value={occupation}
+                onChange={(e) => setOccupation(e.target.value)}
+                placeholder="e.g. high school student, software engineer"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm text-muted-foreground">Context</Label>
+                <span className="text-xs text-muted-foreground">{userContext.length}/200</span>
+              </div>
+              <Textarea
+                value={userContext}
+                onChange={(e) => setUserContext(e.target.value.slice(0, 200))}
+                placeholder="e.g. I train twice a day, I have AP exams coming up"
+                rows={3}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Card 2: Personal Information */}
         <Card style={{ backgroundColor: "#1a1a1a", borderColor: "#2a2a2a", borderRadius: "0.75rem" }}>
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-foreground">
@@ -145,27 +180,41 @@ export function HealthForm({ onSubmit, isLoading }: HealthFormProps) {
               onChange={setAge}
             />
             <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-muted-foreground">BMI (optional)</Label>
-                <Switch
-                  checked={bmiEnabled}
-                  onCheckedChange={setBmiEnabled}
-                />
+              <Label className="text-sm text-muted-foreground">Height</Label>
+              <div className="flex gap-2">
+                <div className="flex items-center gap-1 flex-1">
+                  <Input
+                    type="number"
+                    min={1}
+                    max={8}
+                    value={heightFt}
+                    onChange={(e) => setHeightFt(Math.min(8, Math.max(1, parseInt(e.target.value) || 1)))}
+                    className="w-full"
+                  />
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">ft</span>
+                </div>
+                <div className="flex items-center gap-1 flex-1">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={11}
+                    value={heightIn}
+                    onChange={(e) => setHeightIn(Math.min(11, Math.max(0, parseInt(e.target.value) || 0)))}
+                    className="w-full"
+                  />
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">in</span>
+                </div>
               </div>
-              <Slider
-                min={10}
-                max={50}
-                step={0.1}
-                value={[bmi]}
-                onValueChange={(v) => setBmi(v[0])}
-                disabled={!bmiEnabled}
-                className={!bmiEnabled ? "opacity-40" : ""}
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm text-muted-foreground">Weight (lbs)</Label>
+              <Input
+                type="number"
+                min={1}
+                max={1000}
+                value={weightLbs}
+                onChange={(e) => setWeightLbs(Math.max(1, parseInt(e.target.value) || 1))}
               />
-              {bmiEnabled && (
-                <span className="text-sm font-medium text-primary text-right">
-                  {bmi.toFixed(1)}
-                </span>
-              )}
             </div>
             <div className="flex flex-col gap-2">
               <Label className="text-sm text-muted-foreground">Sex</Label>
@@ -365,38 +414,6 @@ export function HealthForm({ onSubmit, isLoading }: HealthFormProps) {
               displayValue={`${stressLevel}/10`}
               onChange={setStressLevel}
             />
-          </CardContent>
-        </Card>
-
-        {/* Card 6: About You */}
-        <Card style={{ backgroundColor: "#1a1a1a", borderColor: "#2a2a2a", borderRadius: "0.75rem" }}>
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <User className="h-5 w-5 text-primary" />
-              About You
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-2">
-              <Label className="text-sm text-muted-foreground">Occupation</Label>
-              <Input
-                value={occupation}
-                onChange={(e) => setOccupation(e.target.value)}
-                placeholder="e.g. high school student, software engineer"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-muted-foreground">Context</Label>
-                <span className="text-xs text-muted-foreground">{userContext.length}/200</span>
-              </div>
-              <Textarea
-                value={userContext}
-                onChange={(e) => setUserContext(e.target.value.slice(0, 200))}
-                placeholder="e.g. I train twice a day, I have AP exams coming up"
-                rows={3}
-              />
-            </div>
           </CardContent>
         </Card>
 
