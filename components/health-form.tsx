@@ -325,7 +325,7 @@ export function HealthForm({ onSubmit, isLoading }: HealthFormProps) {
               label="Exercise Minutes"
               value={exerciseMinutes}
               min={0}
-              max={180}
+              max={120}
               step={5}
               displayValue={`${exerciseMinutes} min`}
               onChange={setExerciseMinutes}

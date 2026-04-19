@@ -23,6 +23,7 @@ interface HealthResultsData {
     delta: number
   }>
   report: string
+  mode?: "full_analysis" | "daily_checkin"
 }
 
 interface HealthResultsProps {
@@ -67,7 +68,21 @@ export function HealthResults({ data, onBack }: HealthResultsProps) {
         className="flex flex-col items-center gap-4 animate-in fade-in fill-mode-forwards"
         style={{ animationDuration: "500ms", animationDelay: "0ms" }}
       >
-        <h2 className="text-2xl font-bold text-foreground text-center">Your Health Score</h2>
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-2xl font-bold text-foreground text-center">Your Health Score</h2>
+          {data.mode && (
+            <span
+              className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full"
+              style={
+                data.mode === "daily_checkin"
+                  ? { background: "rgba(96,165,250,0.12)", border: "1px solid rgba(96,165,250,0.3)", color: "#60a5fa" }
+                  : { background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.3)", color: "#22c55e" }
+              }
+            >
+              {data.mode === "daily_checkin" ? "⚡ Daily Check-In" : "📋 Full Analysis"}
+            </span>
+          )}
+        </div>
         <ScoreGauge score={data.routine_score} />
       </section>
 
