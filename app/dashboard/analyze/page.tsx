@@ -10,7 +10,7 @@ export default async function AnalyzePage() {
   const { data: profile } = user
     ? await supabase
         .from("user_profiles")
-        .select("occupation, user_context")
+        .select("occupation, user_context, activity_level")
         .eq("id", user.id)
         .single()
     : { data: null }
@@ -102,6 +102,7 @@ export default async function AnalyzePage() {
     <AnalyzeClient
       occupation={profile?.occupation ?? null}
       userContext={profile?.user_context ?? null}
+      activityLevel={profile?.activity_level ?? null}
     />
   )
 }

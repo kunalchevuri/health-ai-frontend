@@ -35,9 +35,10 @@ const LOADING_STEPS = [
 interface Props {
   occupation: string | null
   userContext: string | null
+  activityLevel: string | null
 }
 
-export function AnalyzeClient({ occupation, userContext }: Props) {
+export function AnalyzeClient({ occupation, userContext, activityLevel }: Props) {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [results, setResults] = useState<HealthResultsData | null>(null)
@@ -64,6 +65,7 @@ export function AnalyzeClient({ occupation, userContext }: Props) {
         ...data,
         occupation: occupation ?? "",
         user_context: userContext ?? "",
+        activity_level: activityLevel ?? "moderate",
       }
       const response = await fetch("http://localhost:8000/predict", {
         method: "POST",
