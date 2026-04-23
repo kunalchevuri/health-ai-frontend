@@ -195,7 +195,7 @@ export default function OnboardingProfilePage() {
       }
 
       // Call predict
-      const response = await fetch("http://localhost:8000/predict", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(apiPayload),
